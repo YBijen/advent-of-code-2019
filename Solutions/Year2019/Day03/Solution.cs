@@ -85,6 +85,9 @@ namespace AdventOfCode.Solutions.Year2019
 
         public int CalculateManhattanDistance(Tuple<int, int> pos) => Math.Abs(pos.Item1) + Math.Abs(pos.Item2);
 
+        // Part 2 of the puzzle has different logic when the first value is checked
+        private bool IsFirst;
+
         public Position DrawLine(Position currentPosition, Direction direction, int length, int lineIndex)
         {
             IsFirst = true;
@@ -111,8 +114,6 @@ namespace AdventOfCode.Solutions.Year2019
             }
             return newPosition;
         }
-
-        private bool IsFirst;
 
         private void TryAddToLines(int lineIndex, Position pos)
         {

@@ -74,6 +74,8 @@ namespace AdventOfCode.Solutions.Year2019
         public void DrawLineTest()
         {
             _day03.Nodes = new Dictionary<Tuple<int, int>, Visited>();
+            _day03.PathOfLines = new List<List<Tuple<int, int>>>();
+            _day03.PathOfLines.Add(new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) });
 
             var pos = new Position(0, 0);
             pos = _day03.DrawLine(pos, Direction.Right, 8, 0);
@@ -117,6 +119,11 @@ namespace AdventOfCode.Solutions.Year2019
         public void CollisionCalculateTest()
         {
             _day03.Nodes = new Dictionary<Tuple<int, int>, Visited>();
+            _day03.PathOfLines = new List<List<Tuple<int, int>>>();
+
+            // Add the starting positions for the lines
+            _day03.PathOfLines.Add(new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) });
+            _day03.PathOfLines.Add(new List<Tuple<int, int>> { new Tuple<int, int>(0, 0) });
 
             var posLine1 = new Position(0, 0);
             posLine1 = _day03.DrawLine(posLine1, Direction.Right, 5, 0);
