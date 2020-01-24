@@ -3,8 +3,8 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2019
 {
-    class Day01 : ASolution {
-        
+    class Day01 : ASolution
+    {
         private const int DIVIDE_BY = 3;
         private const int REDUCE_BY = 2;
 

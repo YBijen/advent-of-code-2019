@@ -2,11 +2,11 @@
 
 namespace AdventOfCode.Solutions.Year2019
 {
-    public class Tests
+    public class Day01_Tests
     {
         private readonly Day01 _day01;
 
-        public Tests()
+        public Day01_Tests()
         {
             _day01 = new Day01();
         }
