@@ -11,7 +11,6 @@ namespace AdventOfCode.Solutions.Year2019
         private const int OPCODE_PROCESS_INPUT = 3;
         private const int OPCODE_PROCESS_OUTPUT = 4;
         private const int OPCODE_STOP = 99;
-        private const int INDEX_INCREMENT = 4;
 
         public Day05() : base(5, 2019, "") { }
 
@@ -52,12 +51,12 @@ namespace AdventOfCode.Solutions.Year2019
                 {
                     OPCODE_ADD => HandleOpcodeAdd(program, modes, currentIndex),
                     OPCODE_MULTIPLY => HandleOpcodeAdd(program, modes, currentIndex),
-                    OPCODE_PROCESS_INPUT => throw new NotImplementedException(),
-                    OPCODE_PROCESS_OUTPUT => throw new NotImplementedException(),
+                    OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex, input),
+                    OPCODE_PROCESS_OUTPUT => HandleProcessOutput(program, currentIndex),
                     _ => throw new Exception($"Opcode {opcode} is not implemented")
                 };
 
-                currentIndex += INDEX_INCREMENT;
+                currentIndex += GetIncrementForOpcode(opcode);
             }
 
             return program;
@@ -72,7 +71,7 @@ namespace AdventOfCode.Solutions.Year2019
             var str = parameter.ToString().PadLeft(5, '0');
             for(var i = 0; i < currentModes.Count; i++)
             {
-                currentModes[i] = str[i] == '0' ? Mode.Position : Mode.Immediate;
+                currentModes[i] = str[currentModes.Count - i] == '0' ? Mode.Position : Mode.Immediate;
             }
             return currentModes;
         }
@@ -95,6 +94,18 @@ namespace AdventOfCode.Solutions.Year2019
             return program;
         }
 
+        public List<int> HandleProcessInput(List<int> program, int currentIndex, int input)
+        {
+            program[program[currentIndex + 1]] = input;
+            return program;
+        }
+
+        public List<int> HandleProcessOutput(List<int> program, int currentIndex)
+        {
+            Console.WriteLine($"The output is: {program[program[currentIndex + 1]]}");
+            return program;
+        }
+
         private int GetValueForParameter(ref List<int> program, int index, Mode mode) => mode switch
         {
             Mode.Position => GetValueOfGivenIndex(program, index),
@@ -103,5 +114,20 @@ namespace AdventOfCode.Solutions.Year2019
         };
 
         private int GetValueOfGivenIndex(List<int> input, int index) => input[input[index]];
+
+        private int GetIncrementForOpcode(int opcode)
+        {
+            switch (opcode)
+            {
+                case OPCODE_ADD:
+                case OPCODE_MULTIPLY:
+                    return 4;
+                case OPCODE_PROCESS_INPUT:
+                case OPCODE_PROCESS_OUTPUT:
+                    return 2;
+                default:
+                    throw new Exception($"Opcode {opcode} is not implemented");
+            }
+        }
     }
 }
