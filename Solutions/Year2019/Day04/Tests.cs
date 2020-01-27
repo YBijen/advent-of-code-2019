@@ -91,5 +91,20 @@ namespace AdventOfCode.Solutions.Year2019
         {
             Assert.False(_day04.ContainsIncrementingDigits(number) && _day04.ContainsDoubleDigits(number));
         }
+
+        [Theory]
+        [InlineData(112233)]
+        [InlineData(111122)]
+        public void AoCExamples_Part2_True(int number)
+        {
+            Assert.True(_day04.ContainsSpecificDoubleDigits(number));
+        }
+
+        [Theory]
+        [InlineData(123444)]
+        public void AoCExamples_Part2_False(int number)
+        {
+            Assert.False(_day04.ContainsSpecificDoubleDigits(number));
+        }
     }
 }

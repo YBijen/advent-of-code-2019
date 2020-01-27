@@ -6,9 +6,7 @@ namespace AdventOfCode.Solutions.Year2019
 {
     class Day04 : ASolution
     {
-        public Day04() : base(4, 2019, "") {
-
-        }
+        public Day04() : base(4, 2019, "") { }
 
         protected override string SolvePartOne() {
             var range = ConvertInputToRange(Input);
@@ -16,7 +14,8 @@ namespace AdventOfCode.Solutions.Year2019
         }
 
         protected override string SolvePartTwo() {
-            return null;
+            var range = ConvertInputToRange(Input);
+            return range.Count(number => ContainsIncrementingDigits(number) && ContainsSpecificDoubleDigits(number)).ToString();
         }
 
         public bool ContainsIncrementingDigits(int number)
@@ -56,6 +55,9 @@ namespace AdventOfCode.Solutions.Year2019
 
             return false;
         }
+
+        public bool ContainsSpecificDoubleDigits(int number) =>
+            number.ToString().GroupBy(number => number).Any(v => v.Count() == 2);
 
         public IEnumerable<int> ConvertInputToRange(string input)
         {
