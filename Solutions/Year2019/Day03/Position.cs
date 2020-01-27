@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Solutions.Year2019
+﻿using System;
+
+namespace AdventOfCode.Solutions.Year2019
 {
     public class Position
     {
@@ -27,5 +29,7 @@
                 return base.Equals(obj);
             }
         }
+
+        public override int GetHashCode() => Convert.ToInt32($"{X}{Y}");
     }
 }
