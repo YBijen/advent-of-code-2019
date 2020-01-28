@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2019 {
 
     class Day06 : ASolution
     {
+        private const string OBJECT_YOU = "YOU";
+        private const string OBJECT_SANTA = "SAN";
+
         public Day06() : base(6, 2019, "") { }
 
         protected override string SolvePartOne()
@@ -15,7 +19,8 @@ namespace AdventOfCode.Solutions.Year2019 {
 
         protected override string SolvePartTwo()
         {
-            return null;
+            var objectsInOrbit = ConvertInputToObjectsInOrbit();
+            return CountRequiredTransfersBetweenMeAndSanta(objectsInOrbit).ToString();
         }
 
         public List<Orbit> ConvertInputToObjectsInOrbit()
@@ -63,6 +68,44 @@ namespace AdventOfCode.Solutions.Year2019 {
                 }
             }
             return amountOfOrbits;
+        }
+
+        private int CountRequiredTransfersBetweenMeAndSanta(List<Orbit> objectsInOrbit)
+        {
+            var myOrbit = objectsInOrbit.Find(o => o.Key == OBJECT_YOU);
+            var myOrbitPath = CreatePathFromOrbit(myOrbit);
+
+            var santaOrbit = objectsInOrbit.Find(o => o.Key == OBJECT_SANTA);
+            var santaOrbitPath = CreatePathFromOrbit(santaOrbit);
+
+            Orbit orbitItemToFind = null;
+            var requiredTransfers = 0;
+
+            // Continue transfering in my orbits until we are at a path which is shared with Santa
+            foreach(var orbit in myOrbitPath)
+            {
+                orbitItemToFind = santaOrbitPath.FirstOrDefault(so => so.Key == orbit.Key);
+                if (orbitItemToFind != null)
+                {
+                    break;
+                }
+                requiredTransfers++;
+            }
+
+            // Find the amount of orbits between Santa and the Orbit item which is found in both orbit paths
+            requiredTransfers += santaOrbitPath.ToList().IndexOf(orbitItemToFind);
+
+            return requiredTransfers;
+        }
+
+        private IEnumerable<Orbit> CreatePathFromOrbit(Orbit orbit)
+        {
+            var parentOrbit = orbit.Parent;
+            while(parentOrbit != null)
+            {
+                yield return parentOrbit;
+                parentOrbit = parentOrbit.Parent;
+            }
         }
     }
 }

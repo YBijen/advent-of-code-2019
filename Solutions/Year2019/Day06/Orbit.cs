@@ -15,5 +15,7 @@
 
         public string Key { get; set; }
         public Orbit Parent { get; set; }
+
+        public override string ToString() => Key;
     }
 }
