@@ -27,7 +27,8 @@ namespace AdventOfCode.Solutions.Year2019
 
         protected override string SolvePartTwo() => RunProgram(GetProgramFromInput(), 5).ToString();
 
-        public List<int> GetProgramFromInput() => Input.Split(",").Select(v => int.Parse(v)).ToList();
+        public List<int> GetProgramFromInput() => GetProgramFromInput(Input);
+        public List<int> GetProgramFromInput(string input) => input.Split(",").Select(v => int.Parse(v)).ToList();
 
         public int RunProgram(List<int> program, int inputModifier)
         {
