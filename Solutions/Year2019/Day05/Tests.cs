@@ -135,5 +135,11 @@ namespace AdventOfCode.Solutions.Year2019
             var program = new List<int> { 3, 2, 0, 4, 2, 1, 5, 2, 6, 4, 1, 99 };
             Assert.Equal(2, _day05.GetFinalOutputForProgram(program));
         }
+
+        [Fact]
+        public void Test_Part1()
+        {
+            Assert.Equal("16434972", _day05.Part1);
+        }
     }
 }
