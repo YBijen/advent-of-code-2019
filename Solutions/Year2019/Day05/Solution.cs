@@ -10,24 +10,40 @@ namespace AdventOfCode.Solutions.Year2019
         private const int OPCODE_MULTIPLY = 2;
         private const int OPCODE_PROCESS_INPUT = 3;
         private const int OPCODE_PROCESS_OUTPUT = 4;
+        private const int OPCODE_JUMP_IF_TRUE = 5;
+        private const int OPCODE_JUMP_IF_FALSE = 6;
+        private const int OPCODE_LESS_THAN = 7;
+        private const int OPCODE_EQUALS = 8;
         private const int OPCODE_STOP = 99;
+
+        public string ProgramInputModifier { get; set; }
+        public string DebugProgramInputModifier { get; set; }
+        public int InputModifier => !string.IsNullOrEmpty(DebugProgramInputModifier) ? int.Parse(DebugProgramInputModifier) : int.Parse(ProgramInputModifier);
+
+        /// <summary>
+        /// The output of the program
+        /// </summary>
+        private int Output = 0;
 
         public Day05() : base(5, 2019, "") { }
 
         protected override string SolvePartOne()
         {
-            const int INPUT = 1;
+            ProgramInputModifier = "1";
             var program = Input.Split(",").Select(v => int.Parse(v)).ToList();
-            var result = RunProgram(program, INPUT);
-
-            return GetFinalOutputForProgram(result).ToString();
+            var result = RunProgram(program);
+            return Output.ToString();
         }
 
-        protected override string SolvePartTwo() {
-            return null;
+        protected override string SolvePartTwo()
+        {
+            ProgramInputModifier = "5";
+            var program = Input.Split(",").Select(v => int.Parse(v)).ToList();
+            var result = RunProgram(program);
+            return Output.ToString();
         }
 
-        public List<int> RunProgram(List<int> program, int input)
+        public List<int> RunProgram(List<int> program)
         {
             var currentIndex = 0;
             while (true)
@@ -42,7 +58,7 @@ namespace AdventOfCode.Solutions.Year2019
                 {
                     Mode.Position,
                     Mode.Position,
-                    Mode.Position // Adding the 3rd parameter, but it is not used in this version (yet)
+                    Mode.Position // Adding the third variable even though I don't expect it to be in Immediate mode ever
                 };
 
                 if(IsParameterMode(opcode))
@@ -55,12 +71,28 @@ namespace AdventOfCode.Solutions.Year2019
                 {
                     OPCODE_ADD => HandleOpcodeAdd(program, modes, currentIndex),
                     OPCODE_MULTIPLY => HandleOpcodeMultiply(program, modes, currentIndex),
-                    OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex, input),
+                    OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex),
                     OPCODE_PROCESS_OUTPUT => HandleProcessOutput(program, modes, currentIndex),
+                    OPCODE_JUMP_IF_TRUE => program, // Do nothing
+                    OPCODE_JUMP_IF_FALSE => program, // Do nothing
+                    OPCODE_LESS_THAN => HandleLessThan(program, modes, currentIndex),
+                    OPCODE_EQUALS => HandleEquals(program, modes, currentIndex),
                     _ => throw new Exception($"Opcode {opcode} is not implemented")
                 };
 
-                currentIndex += GetIncrementForOpcode(opcode);
+                // Find the increment for the current opcode
+                currentIndex = opcode switch
+                {
+                    OPCODE_ADD => currentIndex += 4,
+                    OPCODE_MULTIPLY => currentIndex += 4,
+                    OPCODE_PROCESS_INPUT => currentIndex += 2,
+                    OPCODE_PROCESS_OUTPUT => currentIndex += 2,
+                    OPCODE_JUMP_IF_TRUE => FindIncrementForJumpIfTrue(program, modes, currentIndex),
+                    OPCODE_JUMP_IF_FALSE => FindIncrementForJumpIfFalse(program, modes, currentIndex),
+                    OPCODE_LESS_THAN => currentIndex+= 4,
+                    OPCODE_EQUALS => currentIndex += 4,
+                    _ => throw new Exception($"Opcode {opcode} is not implemented")
+                };
             }
 
             return program;
@@ -73,6 +105,14 @@ namespace AdventOfCode.Solutions.Year2019
         private List<Mode> UpdateParameterModes(List<Mode> currentModes, int parameter)
         {
             var str = parameter.ToString().PadLeft(5, '0');
+
+            // Simple check to make sure that the logic is working.
+            // For now I don't expect the input to require the 3rd parameter to support Immediate mode
+            if(str[0] != '0')
+            {
+                throw new Exception("The unexpected happened!");
+            }
+
             for(var i = currentModes.Count - 1; i >= 0; i--)
             {
                 currentModes[(currentModes.Count - 1) - i] = str[i] == '0' ? Mode.Position : Mode.Immediate;
@@ -98,57 +138,57 @@ namespace AdventOfCode.Solutions.Year2019
             return program;
         }
 
-        public List<int> HandleProcessInput(List<int> program, int currentIndex, int input)
+        public List<int> HandleProcessInput(List<int> program, int currentIndex)
         {
-            program[program[currentIndex + 1]] = input;
+            program[program[currentIndex + 1]] = InputModifier;
             return program;
         }
 
         public List<int> HandleProcessOutput(List<int> program, List<Mode> modes, int currentIndex)
         {
-            var value = GetValueForParameter(ref program, currentIndex + 1, modes[0]);
+            Output = GetValueForParameter(ref program, currentIndex + 1, modes[0]);
+            return program;
+        }
 
-            if(value != 0 && !IsNextOpcodeStop(program, currentIndex, OPCODE_PROCESS_OUTPUT))
-            {
-                Console.WriteLine("== Crashed ==");
-                Console.WriteLine("State of the program before crashing:");
-                Console.WriteLine(string.Join("_", program));
-                throw new Exception($"An error occurred at index {currentIndex} because the output value is: {value}.");
-            }
+        public List<int> HandleLessThan(List<int> program, List<Mode> modes, int currentIndex)
+        {
+            var value1 = GetValueForParameter(ref program, currentIndex + 1, modes[0]);
+            var value2 = GetValueForParameter(ref program, currentIndex + 2, modes[1]);
+            program[program[currentIndex + 3]] = value1 < value2 ? 1 : 0;
+            return program;
+        }
 
+        public List<int> HandleEquals(List<int> program, List<Mode> modes, int currentIndex)
+        {
+            var value1 = GetValueForParameter(ref program, currentIndex + 1, modes[0]);
+            var value2 = GetValueForParameter(ref program, currentIndex + 2, modes[1]);
+            program[program[currentIndex + 3]] = value1 == value2 ? 1 : 0;
             return program;
         }
 
         private int GetValueForParameter(ref List<int> program, int index, Mode mode) => mode switch
         {
-            Mode.Position => GetValueOfGivenIndex(program, index),
+            Mode.Position => program[program[index]],
             Mode.Immediate => program[index],
             _ => throw new Exception($"Missing mode: {mode}")
         };
 
-        private int GetValueOfGivenIndex(List<int> input, int index) => input[input[index]];
-
-        private int GetIncrementForOpcode(int opcode)
+        public int FindIncrementForJumpIfTrue(List<int> program, List<Mode> modes, int currentIndex)
         {
-            switch (opcode)
+            if(GetValueForParameter(ref program, currentIndex + 1, modes[0]) != 0)
             {
-                case OPCODE_ADD:
-                case OPCODE_MULTIPLY:
-                    return 4;
-                case OPCODE_PROCESS_INPUT:
-                case OPCODE_PROCESS_OUTPUT:
-                    return 2;
-                default:
-                    throw new Exception($"Opcode {opcode} is not implemented");
+                return GetValueForParameter(ref program, currentIndex + 2, modes[1]);
             }
+            return currentIndex += 3;
         }
 
-        private bool IsNextOpcodeStop(List<int> program, int currentIndex, int currentOpcode) => program[currentIndex + GetIncrementForOpcode(currentOpcode)] == OPCODE_STOP;
-
-        public int GetFinalOutputForProgram(List<int> program)
+        public int FindIncrementForJumpIfFalse(List<int> program, List<Mode> modes, int currentIndex)
         {
-            var lastIndexOf = program.LastIndexOf(OPCODE_PROCESS_OUTPUT);
-            return program[program[lastIndexOf + 1]];
+            if (GetValueForParameter(ref program, currentIndex + 1, modes[0]) == 0)
+            {
+                return GetValueForParameter(ref program, currentIndex + 2, modes[1]);
+            }
+            return currentIndex += 3;
         }
     }
 }
