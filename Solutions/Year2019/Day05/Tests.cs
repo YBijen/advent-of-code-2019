@@ -128,5 +128,12 @@ namespace AdventOfCode.Solutions.Year2019
             var expectedOutput = new List<int> { 3, 2, 1 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
+
+        [Fact]
+        public void Test_FindLastOutput()
+        {
+            var program = new List<int> { 3, 2, 0, 4, 2, 1, 5, 2, 6, 4, 1, 99 };
+            Assert.Equal(2, _day05.GetFinalOutputForProgram(program));
+        }
     }
 }

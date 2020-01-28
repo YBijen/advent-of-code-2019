@@ -14,9 +14,13 @@ namespace AdventOfCode.Solutions.Year2019
 
         public Day05() : base(5, 2019, "") { }
 
-        protected override string SolvePartOne() {
-            var input = Input.Split(",").Select(v => int.Parse(v)).ToList();
-            return RunProgram(input, 1)[0].ToString();
+        protected override string SolvePartOne()
+        {
+            const int INPUT = 1;
+            var program = Input.Split(",").Select(v => int.Parse(v)).ToList();
+            var result = RunProgram(program, INPUT);
+
+            return GetFinalOutputForProgram(result).ToString();
         }
 
         protected override string SolvePartTwo() {
@@ -50,9 +54,9 @@ namespace AdventOfCode.Solutions.Year2019
                 program = opcode switch
                 {
                     OPCODE_ADD => HandleOpcodeAdd(program, modes, currentIndex),
-                    OPCODE_MULTIPLY => HandleOpcodeAdd(program, modes, currentIndex),
+                    OPCODE_MULTIPLY => HandleOpcodeMultiply(program, modes, currentIndex),
                     OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex, input),
-                    OPCODE_PROCESS_OUTPUT => HandleProcessOutput(program, currentIndex),
+                    OPCODE_PROCESS_OUTPUT => HandleProcessOutput(program, modes, currentIndex),
                     _ => throw new Exception($"Opcode {opcode} is not implemented")
                 };
 
@@ -69,9 +73,9 @@ namespace AdventOfCode.Solutions.Year2019
         private List<Mode> UpdateParameterModes(List<Mode> currentModes, int parameter)
         {
             var str = parameter.ToString().PadLeft(5, '0');
-            for(var i = 0; i < currentModes.Count; i++)
+            for(var i = currentModes.Count - 1; i >= 0; i--)
             {
-                currentModes[i] = str[currentModes.Count - i] == '0' ? Mode.Position : Mode.Immediate;
+                currentModes[(currentModes.Count - 1) - i] = str[i] == '0' ? Mode.Position : Mode.Immediate;
             }
             return currentModes;
         }
@@ -100,9 +104,18 @@ namespace AdventOfCode.Solutions.Year2019
             return program;
         }
 
-        public List<int> HandleProcessOutput(List<int> program, int currentIndex)
+        public List<int> HandleProcessOutput(List<int> program, List<Mode> modes, int currentIndex)
         {
-            Console.WriteLine($"The output is: {program[program[currentIndex + 1]]}");
+            var value = GetValueForParameter(ref program, currentIndex + 1, modes[0]);
+
+            if(value != 0 && !IsNextOpcodeStop(program, currentIndex, OPCODE_PROCESS_OUTPUT))
+            {
+                Console.WriteLine("== Crashed ==");
+                Console.WriteLine("State of the program before crashing:");
+                Console.WriteLine(string.Join("_", program));
+                throw new Exception($"An error occurred at index {currentIndex} because the output value is: {value}.");
+            }
+
             return program;
         }
 
@@ -128,6 +141,14 @@ namespace AdventOfCode.Solutions.Year2019
                 default:
                     throw new Exception($"Opcode {opcode} is not implemented");
             }
+        }
+
+        private bool IsNextOpcodeStop(List<int> program, int currentIndex, int currentOpcode) => program[currentIndex + GetIncrementForOpcode(currentOpcode)] == OPCODE_STOP;
+
+        public int GetFinalOutputForProgram(List<int> program)
+        {
+            var lastIndexOf = program.LastIndexOf(OPCODE_PROCESS_OUTPUT);
+            return program[program[lastIndexOf + 1]];
         }
     }
 }
