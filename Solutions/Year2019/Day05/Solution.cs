@@ -16,10 +16,6 @@ namespace AdventOfCode.Solutions.Year2019
         private const int OPCODE_EQUALS = 8;
         private const int OPCODE_STOP = 99;
 
-        public string ProgramInputModifier { get; set; }
-        public string DebugProgramInputModifier { get; set; }
-        public int InputModifier => !string.IsNullOrEmpty(DebugProgramInputModifier) ? int.Parse(DebugProgramInputModifier) : int.Parse(ProgramInputModifier);
-
         /// <summary>
         /// The output of the program
         /// </summary>
@@ -27,23 +23,13 @@ namespace AdventOfCode.Solutions.Year2019
 
         public Day05() : base(5, 2019, "") { }
 
-        protected override string SolvePartOne()
-        {
-            ProgramInputModifier = "1";
-            var program = Input.Split(",").Select(v => int.Parse(v)).ToList();
-            var result = RunProgram(program);
-            return Output.ToString();
-        }
+        protected override string SolvePartOne() => RunProgram(GetProgramFromInput(), 1).ToString();
 
-        protected override string SolvePartTwo()
-        {
-            ProgramInputModifier = "5";
-            var program = Input.Split(",").Select(v => int.Parse(v)).ToList();
-            var result = RunProgram(program);
-            return Output.ToString();
-        }
+        protected override string SolvePartTwo() => RunProgram(GetProgramFromInput(), 5).ToString();
 
-        public List<int> RunProgram(List<int> program)
+        public List<int> GetProgramFromInput() => Input.Split(",").Select(v => int.Parse(v)).ToList();
+
+        public int RunProgram(List<int> program, int inputModifier)
         {
             var currentIndex = 0;
             while (true)
@@ -71,7 +57,7 @@ namespace AdventOfCode.Solutions.Year2019
                 {
                     OPCODE_ADD => HandleOpcodeAdd(program, modes, currentIndex),
                     OPCODE_MULTIPLY => HandleOpcodeMultiply(program, modes, currentIndex),
-                    OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex),
+                    OPCODE_PROCESS_INPUT => HandleProcessInput(program, currentIndex, inputModifier),
                     OPCODE_PROCESS_OUTPUT => HandleProcessOutput(program, modes, currentIndex),
                     OPCODE_JUMP_IF_TRUE => program, // Do nothing
                     OPCODE_JUMP_IF_FALSE => program, // Do nothing
@@ -95,7 +81,7 @@ namespace AdventOfCode.Solutions.Year2019
                 };
             }
 
-            return program;
+            return Output;
         }
 
         private bool IsParameterMode(int opcode) => opcode.ToString().Length >= 2;
@@ -138,9 +124,9 @@ namespace AdventOfCode.Solutions.Year2019
             return program;
         }
 
-        public List<int> HandleProcessInput(List<int> program, int currentIndex)
+        public List<int> HandleProcessInput(List<int> program, int currentIndex, int inputModifier)
         {
-            program[program[currentIndex + 1]] = InputModifier;
+            program[program[currentIndex + 1]] = inputModifier;
             return program;
         }
 
