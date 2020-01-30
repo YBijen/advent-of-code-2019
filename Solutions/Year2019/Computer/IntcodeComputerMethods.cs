@@ -4,8 +4,13 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2019.Computer
 {
+    /// <summary>
+    /// Extending this class in the computers is not the best solution, however it allows me to pass a global value
+    /// </summary>
     public class IntcodeComputerMethods
     {
+        public int RelativeBase { get; set; } = 0;
+
         private const int MAX_PARAMETERS = 3;
 
         public List<int> ConvertProgramInputToProgram(string programInput) => programInput.Split(",").Select(v => int.Parse(v)).ToList();
@@ -73,10 +78,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
             return program;
         }
 
+        public int FetchRelativeBaseModifier(List<int> program, List<ParameterMode> modes, int currentIndex) =>
+            GetValueForParameter(program, currentIndex + 1, modes[0]);
+
         public int GetValueForParameter(List<int> program, int index, ParameterMode mode) => mode switch
         {
             ParameterMode.Position => program[program[index]],
             ParameterMode.Immediate => program[index],
+            ParameterMode.Relative => program[program[index] + RelativeBase],
             _ => throw new Exception($"Missing mode: {mode}")
         };
 

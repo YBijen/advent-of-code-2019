@@ -341,5 +341,42 @@ namespace AdventOfCode.Solutions.Year2019.Computer
             var program = new List<int> { 3, 2, 1, 0 };
             Assert.Equal(3, _methods.GetValueForParameter(program, 0, ParameterMode.Immediate));
         }
+
+        [Fact]
+        public void Test_GetValueForParameter_Relative()
+        {
+            var program = new List<int> { 3, 2, 1, 0 };
+            _methods.RelativeBase = -1;
+            Assert.Equal(1, _methods.GetValueForParameter(program, 0, ParameterMode.Relative));
+        }
+
+        [Fact]
+        public void Test_FetchRelativeBaseModifier_Position()
+        {
+            var modes = new List<ParameterMode> { ParameterMode.Position };
+
+            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2 };
+            Assert.Equal(1, _methods.FetchRelativeBaseModifier(program, modes, 0));
+        }
+
+        [Fact]
+        public void Test_FetchRelativeBaseModifier_Immediate()
+        {
+            var modes = new List<ParameterMode> { ParameterMode.Immediate };
+
+            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2 };
+            Assert.Equal(2, _methods.FetchRelativeBaseModifier(program, modes, 0));
+        }
+
+        [Fact]
+        public void Test_FetchRelativeBaseModifier_Relative()
+        {
+            _methods.RelativeBase = 5;
+
+            var modes = new List<ParameterMode> { ParameterMode.Relative };
+
+            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2, 8 };
+            Assert.Equal(8, _methods.FetchRelativeBaseModifier(program, modes, 0));
+        }
     }
 }

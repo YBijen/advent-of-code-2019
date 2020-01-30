@@ -3,6 +3,7 @@
     public enum ParameterMode
     {
         Position,
-        Immediate
+        Immediate,
+        Relative
     }
 }

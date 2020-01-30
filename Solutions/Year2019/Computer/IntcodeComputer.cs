@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Solutions.Year2019.Computer
 {
-    public class IntcodeComputer
+    public class IntcodeComputer : IntcodeComputerMethods
     {
         private int ProgramOutput = 0;
-
-        private readonly IntcodeComputerMethods _intcodeComputerMethods = new IntcodeComputerMethods();
 
         public int Run(string programInput, int input)
         {
@@ -18,7 +16,8 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
         public int Run(string programInput, Queue<int> input)
         {
-            var program = _intcodeComputerMethods.ConvertProgramInputToProgram(programInput);
+            base.RelativeBase = 0;
+            var program = base.ConvertProgramInputToProgram(programInput);
 
             var currentIndex = 0;
             while (true)
@@ -30,31 +29,36 @@ namespace AdventOfCode.Solutions.Year2019.Computer
                 }
 
                 // Handle the Opcode Modes and possible parameters
-                var modes = _intcodeComputerMethods.GetModesForOpcode(opcode);
-                if (_intcodeComputerMethods.IsParameterMode(opcode))
+                var modes = base.GetModesForOpcode(opcode);
+                if (base.IsParameterMode(opcode))
                 {
-                    opcode = _intcodeComputerMethods.GetOpcodeFromParameter(opcode);
+                    opcode = base.GetOpcodeFromParameter(opcode);
                 }
 
                 // Handle Opcode Logic
                 if(opcode == Opcode.ProcessOutput)
                 {
-                    this.ProgramOutput = _intcodeComputerMethods.HandleProcessOutput(program, modes, currentIndex);
+                    this.ProgramOutput = base.HandleProcessOutput(program, modes, currentIndex);
                 }
                 else if(opcode == Opcode.ProcessInput)
                 {
-                    program = _intcodeComputerMethods.HandleProcessInput(program, currentIndex, input.Dequeue());
+                    program = base.HandleProcessInput(program, currentIndex, input.Dequeue());
+                }
+                else if(opcode == Opcode.UpdateRelativeBase)
+                {
+                    base.RelativeBase += base.FetchRelativeBaseModifier(program, modes, currentIndex);
                 }
                 else
                 {
                     program = opcode switch
                     {
-                        Opcode.Add => _intcodeComputerMethods.HandleOpcodeAdd(program, modes, currentIndex),
-                        Opcode.Multiply => _intcodeComputerMethods.HandleOpcodeMultiply(program, modes, currentIndex),
-                        Opcode.LessThan => _intcodeComputerMethods.HandleLessThan(program, modes, currentIndex),
-                        Opcode.Equals => _intcodeComputerMethods.HandleEquals(program, modes, currentIndex),
+                        Opcode.Add => base.HandleOpcodeAdd(program, modes, currentIndex),
+                        Opcode.Multiply => base.HandleOpcodeMultiply(program, modes, currentIndex),
+                        Opcode.LessThan => base.HandleLessThan(program, modes, currentIndex),
+                        Opcode.Equals => base.HandleEquals(program, modes, currentIndex),
                         Opcode.JumpIfTrue => program,
                         Opcode.JumpIfFalse => program,
+                        Opcode.UpdateRelativeBase => program,
                         _ => throw new Exception($"The given opcode: {opcode} is not simple.")
                     };
                 }
@@ -62,11 +66,11 @@ namespace AdventOfCode.Solutions.Year2019.Computer
                 // Find the index increment for the given opcode
                 if (opcode == Opcode.JumpIfFalse)
                 {
-                    currentIndex = _intcodeComputerMethods.FindIncrementForJumpIfFalse(program, modes, currentIndex);
+                    currentIndex = base.FindIncrementForJumpIfFalse(program, modes, currentIndex);
                 }
                 else if (opcode == Opcode.JumpIfTrue)
                 {
-                    currentIndex = _intcodeComputerMethods.FindIncrementForJumpIfTrue(program, modes, currentIndex);
+                    currentIndex = base.FindIncrementForJumpIfTrue(program, modes, currentIndex);
                 }
                 else
                 {
@@ -78,6 +82,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
                         Opcode.ProcessOutput => 2,
                         Opcode.LessThan => 4,
                         Opcode.Equals => 4,
+                        Opcode.UpdateRelativeBase => 2,
                         _ => throw new Exception($"An index increment was not given for the opcode: {opcode}.")
                     };
                 }
