@@ -27,5 +27,17 @@ namespace AdventOfCode.Solutions.Year2019
         {
             Assert.Equal(_day07.RunProgramForGivenInputWithFeedbackloop(input), expected);
         }
-}
+
+        [Fact]
+        public void Test_Answer_Part1()
+        {
+            Assert.Equal("844468", _day07.Part1);
+        }
+
+        [Fact]
+        public void Test_Answer_Part2()
+        {
+            Assert.Equal("4215746", _day07.Part2);
+        }
+    }
 }

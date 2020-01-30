@@ -1,3 +1,4 @@
+using AdventOfCode.Solutions.Year2019.Computer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,50 +7,17 @@ namespace AdventOfCode.Solutions.Year2019
 {
     class Day07 : ASolution
     {
-        private readonly IntCodeComputer_Day09 _intcodeComptuer;
+        private readonly IntcodeComputer _intcodeComptuer;
 
         public Day07() : base(7, 2019, "")
         {
-            _intcodeComptuer = new IntCodeComputer_Day09();
+            _intcodeComptuer = new IntcodeComputer();
         }
 
         protected override string SolvePartOne() => RunProgramForGivenInput(Input).ToString();
-
         protected override string SolvePartTwo() => RunProgramForGivenInputWithFeedbackloop(Input).ToString();
 
-        public int RunProgramForGivenInputWithFeedbackloop(string input)
-        {
-            var itemsToPermuate = new List<int> { 5, 6, 7, 8, 9 };
-            var permutationList = GetPermutations(itemsToPermuate, itemsToPermuate.Count);
-
-            // Keep track of the highest output
-            var highestOutput = 0;
-
-            foreach (var permutation in permutationList)
-            {
-                var output = 0;
-
-                // For each value in the permutation we create a computer and supply the permutation value
-                var intcodeComputers = permutation.Select(p => new IntCodeComputer_Day07_Part2(input, p)).ToList();
-
-                // Continue running the amplifiers until they are all stopped
-                while(intcodeComputers.Any(ic => !ic.IsStopped))
-                {
-                    foreach(var c in intcodeComputers.Where(x => !x.IsStopped))
-                    {
-                        c.Input.Enqueue(output);
-                        output = c.RunProgram();
-                    }
-                }
-
-                if (output > highestOutput)
-                {
-                    highestOutput = output;
-                }
-            }
-
-            return highestOutput;
-        }
+        public int RunComputer(string programInput, int input) => _intcodeComptuer.Run(programInput, input);
 
         public int RunProgramForGivenInput(string programInput)
         {
@@ -70,7 +38,7 @@ namespace AdventOfCode.Solutions.Year2019
                     intCodeInput.Enqueue(ampSetting);
                     intCodeInput.Enqueue(output);
 
-                    output = _intcodeComptuer.RunProgram(programInput, intCodeInput);
+                    output = _intcodeComptuer.Run(programInput, intCodeInput);
 
                     // A simple check to make sure that each program runs correctly
                     if (intCodeInput.Count != 0)
@@ -87,6 +55,42 @@ namespace AdventOfCode.Solutions.Year2019
 
             return highestOutput;
         }
+
+        public int RunProgramForGivenInputWithFeedbackloop(string input)
+        {
+            var itemsToPermuate = new List<int> { 5, 6, 7, 8, 9 };
+            var permutationList = GetPermutations(itemsToPermuate, itemsToPermuate.Count);
+
+            // Keep track of the highest output
+            var highestOutput = 0;
+
+            foreach (var permutation in permutationList)
+            {
+                var output = 0;
+
+                // For each value in the permutation we create a computer and supply the permutation value
+                var intcodeComputers = permutation.Select(p => new StatefulIntcodeComputer(input, p)).ToList();
+
+                // Continue running the amplifiers until they are all stopped
+                while (intcodeComputers.Any(ic => ic.IsRunning))
+                {
+                    foreach (var c in intcodeComputers.Where(ic => ic.IsRunning))
+                    {
+                        c.Input.Enqueue(output);
+                        output = c.Run();
+                    }
+                }
+
+                if (output > highestOutput)
+                {
+                    highestOutput = output;
+                }
+            }
+
+            return highestOutput;
+        }
+
+
 
         /// <summary>
         /// Method "stolen" from: https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array
