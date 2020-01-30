@@ -13,7 +13,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
         private const int MAX_PARAMETERS = 3;
 
-        public List<int> ConvertProgramInputToProgram(string programInput) => programInput.Split(",").Select(v => int.Parse(v)).ToList();
+        public List<long> ConvertProgramInputToProgram(string programInput) => programInput.Split(",").Select(v => long.Parse(v)).ToList();
 
         public List<ParameterMode> GetModesForOpcode(Opcode opcode)
         {
@@ -35,61 +35,61 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
         public bool IsParameterMode(Opcode opcode) => !Enum.IsDefined(typeof(Opcode), opcode);
 
-        public List<int> HandleOpcodeAdd(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public List<long> HandleOpcodeAdd(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             var value1 = GetValueForParameter(program, currentIndex + 1, modes[0]);
             var value2 = GetValueForParameter(program, currentIndex + 2, modes[1]);
             var updateIndex = program[currentIndex + 3];
-            program[updateIndex] = value1 + value2;
+            program[(int)updateIndex] = value1 + value2;
             return program;
         }
 
-        public List<int> HandleOpcodeMultiply(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public List<long> HandleOpcodeMultiply(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             var value1 = GetValueForParameter(program, currentIndex + 1, modes[0]);
             var value2 = GetValueForParameter(program, currentIndex + 2, modes[1]);
             var updateIndex = program[currentIndex + 3];
-            program[updateIndex] = value1 * value2;
+            program[(int)updateIndex] = value1 * value2;
             return program;
         }
 
-        public List<int> HandleProcessInput(List<int> program, int currentIndex, int inputModifier)
+        public List<long> HandleProcessInput(List<long> program, int currentIndex, int inputModifier)
         {
-            program[program[currentIndex + 1]] = inputModifier;
+            program[(int)program[(int)currentIndex + 1]] = inputModifier;
             return program;
         }
 
-        public int HandleProcessOutput(List<int> program, List<ParameterMode> modes, int currentIndex) =>
+        public int HandleProcessOutput(List<long> program, List<ParameterMode> modes, int currentIndex) =>
              GetValueForParameter(program, currentIndex + 1, modes[0]);
 
-        public List<int> HandleLessThan(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public List<long> HandleLessThan(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             var value1 = GetValueForParameter(program, currentIndex + 1, modes[0]);
             var value2 = GetValueForParameter(program, currentIndex + 2, modes[1]);
-            program[program[currentIndex + 3]] = value1 < value2 ? 1 : 0;
+            program[(int)program[currentIndex + 3]] = value1 < value2 ? 1 : 0;
             return program;
         }
 
-        public List<int> HandleEquals(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public List<long> HandleEquals(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             var value1 = GetValueForParameter(program, currentIndex + 1, modes[0]);
             var value2 = GetValueForParameter(program, currentIndex + 2, modes[1]);
-            program[program[currentIndex + 3]] = value1 == value2 ? 1 : 0;
+            program[(int)program[currentIndex + 3]] = value1 == value2 ? 1 : 0;
             return program;
         }
 
-        public int FetchRelativeBaseModifier(List<int> program, List<ParameterMode> modes, int currentIndex) =>
+        public int FetchRelativeBaseModifier(List<long> program, List<ParameterMode> modes, int currentIndex) =>
             GetValueForParameter(program, currentIndex + 1, modes[0]);
 
-        public int GetValueForParameter(List<int> program, int index, ParameterMode mode) => mode switch
+        public int GetValueForParameter(List<long> program, int index, ParameterMode mode) => mode switch
         {
-            ParameterMode.Position => program[program[index]],
-            ParameterMode.Immediate => program[index],
-            ParameterMode.Relative => program[program[index] + RelativeBase],
+            ParameterMode.Position => (int)program[(int)program[index]],
+            ParameterMode.Immediate => (int)program[index],
+            ParameterMode.Relative => (int)program[(int)program[index] + RelativeBase],
             _ => throw new Exception($"Missing mode: {mode}")
         };
 
-        public int FindIncrementForJumpIfTrue(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public int FindIncrementForJumpIfTrue(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             if (GetValueForParameter(program, currentIndex + 1, modes[0]) != 0)
             {
@@ -98,7 +98,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
             return currentIndex += 3;
         }
 
-        public int FindIncrementForJumpIfFalse(List<int> program, List<ParameterMode> modes, int currentIndex)
+        public int FindIncrementForJumpIfFalse(List<long> program, List<ParameterMode> modes, int currentIndex)
         {
             if (GetValueForParameter(program, currentIndex + 1, modes[0]) == 0)
             {

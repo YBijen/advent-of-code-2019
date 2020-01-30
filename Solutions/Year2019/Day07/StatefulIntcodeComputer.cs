@@ -9,7 +9,7 @@ namespace AdventOfCode.Solutions.Year2019
         private int ProgramOutput = 0;
         private int CurrentIndex = 0;
 
-        private List<int> Program;
+        private List<long> Program;
         public readonly Queue<int> Input = new Queue<int>();
 
         public bool IsRunning = true;

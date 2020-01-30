@@ -17,7 +17,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         [Fact]
         public void Test_HandleOpcodeAdd_Position()
         {
-            var program = new List<int> { 1, 2, 3, 0 };
+            var program = new List<long> { 1, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -27,14 +27,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeAdd(program, modes, 0);
 
-            var expectedOutput = new List<int> { 3, 2, 3, 0 };
+            var expectedOutput = new List<long> { 3, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Fact]
         public void Test_HandleOpcodeAdd_Immediate()
         {
-            var program = new List<int> { 1, 2, 3, 0 };
+            var program = new List<long> { 1, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -44,14 +44,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeAdd(program, modes, 0);
 
-            var expectedOutput = new List<int> { 5, 2, 3, 0 };
+            var expectedOutput = new List<long> { 5, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Fact]
         public void Test_HandleOpcodeAdd_Combination()
         {
-            var program = new List<int> { 1, 2, 3, 0 };
+            var program = new List<long> { 1, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -61,14 +61,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeAdd(program, modes, 0);
 
-            var expectedOutput = new List<int> { 6, 2, 3, 0 };
+            var expectedOutput = new List<long> { 6, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Fact]
         public void Test_HandleOpcodeMultiply_Position()
         {
-            var program = new List<int> { 2, 2, 3, 0 };
+            var program = new List<long> { 2, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -78,14 +78,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeMultiply(program, modes, 0);
 
-            var expectedOutput = new List<int> { 0, 2, 3, 0 };
+            var expectedOutput = new List<long> { 0, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Fact]
         public void Test_HandleOpcodeMultiply_Immediate()
         {
-            var program = new List<int> { 2, 2, 3, 0 };
+            var program = new List<long> { 2, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -95,14 +95,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeMultiply(program, modes, 0);
 
-            var expectedOutput = new List<int> { 6, 2, 3, 0 };
+            var expectedOutput = new List<long> { 6, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Fact]
         public void Test_HandleOpcodeMultiply_Combination()
         {
-            var program = new List<int> { 2, 2, 3, 0 };
+            var program = new List<long> { 2, 2, 3, 0 };
 
             var modes = new List<ParameterMode>
             {
@@ -112,14 +112,14 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 
             var output = _methods.HandleOpcodeMultiply(program, modes, 0);
 
-            var expectedOutput = new List<int> { 9, 2, 3, 0 };
+            var expectedOutput = new List<long> { 9, 2, 3, 0 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 3, 0, 0 }, new int[] { 1, 3, 0, 0 })]
-        [InlineData(new int[] { 7, 0, 3, 0 }, new int[] { 0, 0, 3, 0 })]
-        public void Test_HandleOpcodeLessThan_Position(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 3, 0, 0 }, new long[] { 1, 3, 0, 0 })]
+        [InlineData(new long[] { 7, 0, 3, 0 }, new long[] { 0, 0, 3, 0 })]
+        public void Test_HandleOpcodeLessThan_Position(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -132,9 +132,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 3, 0, 0 }, new int[] { 0, 3, 0, 0 })]
-        [InlineData(new int[] { 7, 0, 3, 0 }, new int[] { 1, 0, 3, 0 })]
-        public void Test_HandleOpcodeLessThan_Immediate(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 3, 0, 0 }, new long[] { 0, 3, 0, 0 })]
+        [InlineData(new long[] { 7, 0, 3, 0 }, new long[] { 1, 0, 3, 0 })]
+        public void Test_HandleOpcodeLessThan_Immediate(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -147,9 +147,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 3, 1, 0 }, new int[] { 1, 3, 1, 0 })]
-        [InlineData(new int[] { 7, 1, 0, 0 }, new int[] { 0, 1, 0, 0 })]
-        public void Test_HandleOpcodeLessThan_Combination(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 3, 1, 0 }, new long[] { 1, 3, 1, 0 })]
+        [InlineData(new long[] { 7, 1, 0, 0 }, new long[] { 0, 1, 0, 0 })]
+        public void Test_HandleOpcodeLessThan_Combination(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -162,9 +162,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 3, 3, 0 }, new int[] { 1, 3, 3, 0 })]
-        [InlineData(new int[] { 7, 0, 3, 0 }, new int[] { 0, 0, 3, 0 })]
-        public void Test_HandleOpcodeEquals_Position(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 3, 3, 0 }, new long[] { 1, 3, 3, 0 })]
+        [InlineData(new long[] { 7, 0, 3, 0 }, new long[] { 0, 0, 3, 0 })]
+        public void Test_HandleOpcodeEquals_Position(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -177,9 +177,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 2, 2, 0 }, new int[] { 1, 2, 2, 0 })]
-        [InlineData(new int[] { 7, 2, 3, 0 }, new int[] { 0, 2, 3, 0 })]
-        public void Test_HandleOpcodeEquals_Immediate(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 2, 2, 0 }, new long[] { 1, 2, 2, 0 })]
+        [InlineData(new long[] { 7, 2, 3, 0 }, new long[] { 0, 2, 3, 0 })]
+        public void Test_HandleOpcodeEquals_Immediate(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -192,9 +192,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 3, 0, 0 }, new int[] { 1, 3, 0, 0 })]
-        [InlineData(new int[] { 7, 1, 0, 0 }, new int[] { 0, 1, 0, 0 })]
-        public void Test_HandleOpcodeEquals_Combination(IEnumerable<int> program, IEnumerable<int> expected)
+        [InlineData(new long[] { 7, 3, 0, 0 }, new long[] { 1, 3, 0, 0 })]
+        [InlineData(new long[] { 7, 1, 0, 0 }, new long[] { 0, 1, 0, 0 })]
+        public void Test_HandleOpcodeEquals_Combination(IEnumerable<long> program, IEnumerable<long> expected)
         {
             var modes = new List<ParameterMode>
             {
@@ -207,9 +207,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 1, 0 }, 7)]
-        [InlineData(new int[] { 7, 2, 0 }, 3)]
-        public void Test_HandleOpcodeJumpIfTrue_Position(IEnumerable<int> program, int expectedIndexIncrement)
+        [InlineData(new long[] { 7, 1, 0 }, 7)]
+        [InlineData(new long[] { 7, 2, 0 }, 3)]
+        public void Test_HandleOpcodeJumpIfTrue_Position(IEnumerable<long> program, int expectedIndexIncrement)
         {
             var modes = new List<ParameterMode>
             {
@@ -221,9 +221,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 1, 0 }, 0)]
-        [InlineData(new int[] { 7, 0, 0 }, 3)]
-        public void Test_HandleOpcodeJumpIfTrue_Immediate(IEnumerable<int> program, int expectedIndexIncrement)
+        [InlineData(new long[] { 7, 1, 0 }, 0)]
+        [InlineData(new long[] { 7, 0, 0 }, 3)]
+        public void Test_HandleOpcodeJumpIfTrue_Immediate(IEnumerable<long> program, int expectedIndexIncrement)
         {
             var modes = new List<ParameterMode>
             {
@@ -235,9 +235,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 1, 0 }, 3)]
-        [InlineData(new int[] { 7, 2, 0 }, 7)]
-        public void Test_HandleOpcodeJumpIfFalse_Position(IEnumerable<int> program, int expectedIndexIncrement)
+        [InlineData(new long[] { 7, 1, 0 }, 3)]
+        [InlineData(new long[] { 7, 2, 0 }, 7)]
+        public void Test_HandleOpcodeJumpIfFalse_Position(IEnumerable<long> program, int expectedIndexIncrement)
         {
             var modes = new List<ParameterMode>
             {
@@ -249,9 +249,9 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 7, 1, 0 }, 3)]
-        [InlineData(new int[] { 7, 0, 0 }, 0)]
-        public void Test_HandleOpcodeJumpIfFalse_Immediate(IEnumerable<int> program, int expectedIndexIncrement)
+        [InlineData(new long[] { 7, 1, 0 }, 3)]
+        [InlineData(new long[] { 7, 0, 0 }, 0)]
+        public void Test_HandleOpcodeJumpIfFalse_Immediate(IEnumerable<long> program, int expectedIndexIncrement)
         {
             var modes = new List<ParameterMode>
             {
@@ -265,11 +265,11 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         [Fact]
         public void Test_HandleInput()
         {
-            var program = new List<int> { 3, 2, 0 };
+            var program = new List<long> { 3, 2, 0 };
 
             var output = _methods.HandleProcessInput(program, 0, 1);
 
-            var expectedOutput = new List<int> { 3, 2, 1 };
+            var expectedOutput = new List<long> { 3, 2, 1 };
             Assert.True(output.SequenceEqual(expectedOutput));
         }
 
@@ -277,7 +277,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         public void Test_GetModesForOpcode()
         {
             var modes = _methods.GetModesForOpcode(Opcode.Add);
-            Assert.True(modes.Count == 3);
+            //Assert.True(modes.Count == 3);
             Assert.True(modes.All(m => m == ParameterMode.Position));
         }
 
@@ -285,7 +285,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         public void Test_GetModesForParameterOpcode()
         {
             var modes = _methods.GetModesForOpcode((Opcode)101); // Will become: "00101"
-            Assert.True(modes.Count == 3);
+            //Assert.True(modes.Count == 3);
             Assert.True(modes[0] == ParameterMode.Immediate);
             Assert.True(modes[1] == ParameterMode.Position);
             Assert.True(modes[2] == ParameterMode.Position);
@@ -311,18 +311,18 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         }
 
         [Theory]
-        [InlineData(new int[] { 4, 2, 0, 1 }, 0)]
-        [InlineData(new int[] { 4, 2, 1, 1 }, 1)]
-        public void Test_HandleOpcodeOutput_Position(IEnumerable<int> program, int expectedOutput)
+        [InlineData(new long[] { 4, 2, 0, 1 }, 0)]
+        [InlineData(new long[] { 4, 2, 1, 1 }, 1)]
+        public void Test_HandleOpcodeOutput_Position(IEnumerable<long> program, int expectedOutput)
         {
             var modes = new List<ParameterMode> { ParameterMode.Position };
             Assert.Equal(expectedOutput, _methods.HandleProcessOutput(program.ToList(), modes, 0));
         }
 
         [Theory]
-        [InlineData(new int[] { 4, 2, 0, 1 }, 2)]
-        [InlineData(new int[] { 4, 3, 1, 1 }, 3)]
-        public void Test_HandleOpcodeOutput_Immediate(IEnumerable<int> program, int expectedOutput)
+        [InlineData(new long[] { 4, 2, 0, 1 }, 2)]
+        [InlineData(new long[] { 4, 3, 1, 1 }, 3)]
+        public void Test_HandleOpcodeOutput_Immediate(IEnumerable<long> program, int expectedOutput)
         {
             var modes = new List<ParameterMode> { ParameterMode.Immediate };
             Assert.Equal(expectedOutput, _methods.HandleProcessOutput(program.ToList(), modes, 0));
@@ -331,21 +331,21 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         [Fact]
         public void Test_GetValueForParameter_Position()
         {
-            var program = new List<int> { 3, 2, 1, 0 };
+            var program = new List<long> { 3, 2, 1, 0 };
             Assert.Equal(0, _methods.GetValueForParameter(program, 0, ParameterMode.Position));
         }
 
         [Fact]
         public void Test_GetValueForParameter_Immediate()
         {
-            var program = new List<int> { 3, 2, 1, 0 };
+            var program = new List<long> { 3, 2, 1, 0 };
             Assert.Equal(3, _methods.GetValueForParameter(program, 0, ParameterMode.Immediate));
         }
 
         [Fact]
         public void Test_GetValueForParameter_Relative()
         {
-            var program = new List<int> { 3, 2, 1, 0 };
+            var program = new List<long> { 3, 2, 1, 0 };
             _methods.RelativeBase = -1;
             Assert.Equal(1, _methods.GetValueForParameter(program, 0, ParameterMode.Relative));
         }
@@ -355,7 +355,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         {
             var modes = new List<ParameterMode> { ParameterMode.Position };
 
-            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2 };
+            var program = new List<long> { 2, 2, 1, 0, 4, 6, 2 };
             Assert.Equal(1, _methods.FetchRelativeBaseModifier(program, modes, 0));
         }
 
@@ -364,19 +364,19 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         {
             var modes = new List<ParameterMode> { ParameterMode.Immediate };
 
-            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2 };
+            var program = new List<long> { 2, 2, 1, 0, 4, 6, 2 };
             Assert.Equal(2, _methods.FetchRelativeBaseModifier(program, modes, 0));
         }
 
         [Fact]
         public void Test_FetchRelativeBaseModifier_Relative()
         {
-            _methods.RelativeBase = 5;
+            _methods.RelativeBase = 4;
 
             var modes = new List<ParameterMode> { ParameterMode.Relative };
 
-            var program = new List<int> { 2, 2, 1, 0, 4, 6, 2, 8 };
-            Assert.Equal(8, _methods.FetchRelativeBaseModifier(program, modes, 0));
+            var program = new List<long> { 2, 2, 1, 0, 4, 6, 7, 8 };
+            Assert.Equal(7, _methods.FetchRelativeBaseModifier(program, modes, 0));
         }
     }
 }
