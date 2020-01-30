@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode.Solutions.Year2019
 {
-    enum Mode
+    public enum Mode
     {
         Position,
         Immediate

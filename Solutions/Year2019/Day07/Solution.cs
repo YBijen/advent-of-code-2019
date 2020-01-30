@@ -6,11 +6,11 @@ namespace AdventOfCode.Solutions.Year2019
 {
     class Day07 : ASolution
     {
-        private readonly IntCodeComputer_Day07 _intcodeComptuer;
+        private readonly IntCodeComputer_Day09 _intcodeComptuer;
 
         public Day07() : base(7, 2019, "")
         {
-            _intcodeComptuer = new IntCodeComputer_Day07();
+            _intcodeComptuer = new IntCodeComputer_Day09();
         }
 
         protected override string SolvePartOne() => RunProgramForGivenInput(Input).ToString();

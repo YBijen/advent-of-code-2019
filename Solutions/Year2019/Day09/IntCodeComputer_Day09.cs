@@ -8,7 +8,7 @@ namespace AdventOfCode.Solutions.Year2019
     /// Copy of the program from Day 5 with a slight modification to the input parameter
     /// It is now a queue with integers instead of a single integer
     /// </summary>
-    public class IntCodeComputer_Day07
+    public class IntCodeComputer_Day09
     {
         private const int OPCODE_ADD = 1;
         private const int OPCODE_MULTIPLY = 2;
