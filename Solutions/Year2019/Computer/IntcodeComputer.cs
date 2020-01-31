@@ -5,16 +5,16 @@ namespace AdventOfCode.Solutions.Year2019.Computer
 {
     public class IntcodeComputer : IntcodeComputerMethods
     {
-        private int ProgramOutput = 0;
+        private long ProgramOutput = 0;
 
-        public int Run(string programInput, int input)
+        public long Run(string programInput, long input)
         {
-            var queue = new Queue<int>();
+            var queue = new Queue<long>();
             queue.Enqueue(input);
             return Run(programInput, queue);
         }
 
-        public int Run(string programInput, Queue<int> input)
+        public long Run(string programInput, Queue<long> input)
         {
             base.RelativeBase = 0;
             var program = base.ConvertProgramInputToProgram(programInput);
@@ -42,7 +42,7 @@ namespace AdventOfCode.Solutions.Year2019.Computer
                 }
                 else if(opcode == Opcode.ProcessInput)
                 {
-                    program = base.HandleProcessInput(program, currentIndex, input.Dequeue());
+                    program = base.HandleProcessInput(program, modes, currentIndex, input.Dequeue());
                 }
                 else if(opcode == Opcode.UpdateRelativeBase)
                 {
@@ -85,6 +85,11 @@ namespace AdventOfCode.Solutions.Year2019.Computer
                         Opcode.UpdateRelativeBase => 2,
                         _ => throw new Exception($"An index increment was not given for the opcode: {opcode}.")
                     };
+                }
+
+                if(opcode == Opcode.ProcessOutput)
+                {
+                    Console.WriteLine("Current output: " + ProgramOutput);
                 }
             }
 

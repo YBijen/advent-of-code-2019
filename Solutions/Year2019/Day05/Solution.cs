@@ -12,6 +12,6 @@ namespace AdventOfCode.Solutions.Year2019
         protected override string SolvePartOne() => RunComputer(Input, 1).ToString();
         protected override string SolvePartTwo() => RunComputer(Input, 5).ToString();
 
-        public int RunComputer(string programInput, int input) => _intcodeComputer.Run(programInput, input);
+        public long RunComputer(string programInput, int input) => _intcodeComputer.Run(programInput, input);
     }
 }

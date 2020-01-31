@@ -265,9 +265,15 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         [Fact]
         public void Test_HandleInput()
         {
+            var modes = new List<ParameterMode>
+            {
+                ParameterMode.Position,
+                ParameterMode.Position
+            };
+
             var program = new List<long> { 3, 2, 0 };
 
-            var output = _methods.HandleProcessInput(program, 0, 1);
+            var output = _methods.HandleProcessInput(program, modes, 0, 1);
 
             var expectedOutput = new List<long> { 3, 2, 1 };
             Assert.True(output.SequenceEqual(expectedOutput));
@@ -277,18 +283,16 @@ namespace AdventOfCode.Solutions.Year2019.Computer
         public void Test_GetModesForOpcode()
         {
             var modes = _methods.GetModesForOpcode(Opcode.Add);
-            //Assert.True(modes.Count == 3);
             Assert.True(modes.All(m => m == ParameterMode.Position));
         }
 
         [Fact]
         public void Test_GetModesForParameterOpcode()
         {
-            var modes = _methods.GetModesForOpcode((Opcode)101); // Will become: "00101"
-            //Assert.True(modes.Count == 3);
+            var modes = _methods.GetModesForOpcode((Opcode)20101);
             Assert.True(modes[0] == ParameterMode.Immediate);
             Assert.True(modes[1] == ParameterMode.Position);
-            Assert.True(modes[2] == ParameterMode.Position);
+            Assert.True(modes[2] == ParameterMode.Relative);
         }
 
         [Fact]

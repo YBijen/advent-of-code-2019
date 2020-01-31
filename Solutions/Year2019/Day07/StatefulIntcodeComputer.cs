@@ -6,27 +6,27 @@ namespace AdventOfCode.Solutions.Year2019
 {
     public class StatefulIntcodeComputer : IntcodeComputerMethods
     {
-        private int ProgramOutput = 0;
+        private long ProgramOutput = 0;
         private int CurrentIndex = 0;
 
         private List<long> Program;
-        public readonly Queue<int> Input = new Queue<int>();
+        public readonly Queue<long> Input = new Queue<long>();
 
         public bool IsRunning = true;
 
-        public StatefulIntcodeComputer(string programInput, int input)
+        public StatefulIntcodeComputer(string programInput, long input)
         {
             this.Program = base.ConvertProgramInputToProgram(programInput);
             this.Input.Enqueue(input);
         }
 
-        public StatefulIntcodeComputer(string programInput, Queue<int> input)
+        public StatefulIntcodeComputer(string programInput, Queue<long> input)
         {
             this.Program = base.ConvertProgramInputToProgram(programInput);
             this.Input = input;
         }
 
-        public int Run()
+        public long Run()
         {
             while (true)
             {
@@ -45,13 +45,13 @@ namespace AdventOfCode.Solutions.Year2019
                 }
 
                 // Handle Opcode Logic
-                if(opcode == Opcode.ProcessOutput)
+                if (opcode == Opcode.ProcessOutput)
                 {
                     this.ProgramOutput = base.HandleProcessOutput(Program, modes, CurrentIndex);
                 }
-                else if(opcode == Opcode.ProcessInput)
+                else if (opcode == Opcode.ProcessInput)
                 {
-                    Program = base.HandleProcessInput(Program, CurrentIndex, Input.Dequeue());
+                    Program = base.HandleProcessInput(Program, modes, CurrentIndex, Input.Dequeue());
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace AdventOfCode.Solutions.Year2019
                     };
                 }
 
-                if(opcode == Opcode.ProcessOutput)
+                if (opcode == Opcode.ProcessOutput)
                 {
                     return this.ProgramOutput;
                 }
